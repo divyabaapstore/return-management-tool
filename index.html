@@ -2,103 +2,107 @@
 <html>
 <head>
     <title>Return Management Tool</title>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
     <style>
         body{
             font-family: Arial, sans-serif;
-            padding: 30px;
-            background: #f5f5f5;
+            background:#f5f5f5;
+            padding:40px;
         }
 
-        .search-box{
-            max-width: 500px;
-            margin: auto;
-            text-align: center;
+        .container{
+            max-width:700px;
+            margin:auto;
+            background:#fff;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.1);
         }
 
         input{
-            width: 70%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            width:70%;
+            padding:12px;
+            border:1px solid #ddd;
+            border-radius:5px;
         }
 
         button{
-            padding: 12px 20px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            padding:12px 20px;
+            background:#28a745;
+            color:#fff;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
         }
 
-        .result{
-            margin-top: 30px;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px #ddd;
+        .card{
+            margin-top:20px;
+            border:1px solid #ddd;
+            padding:20px;
+            border-radius:10px;
         }
 
-        .result img{
-            width: 150px;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
+        img{
+            width:150px;
+            height:150px;
+            object-fit:cover;
         }
     </style>
 </head>
+
 <body>
 
-<div class="search-box">
-    <h2>Return SKU Search</h2>
+<div class="container">
+    <h2>SKU Search</h2>
 
-    <input type="text" id="skuInput" placeholder="Enter SKU">
+    <input type="text" id="sku" placeholder="Enter SKU">
     <button onclick="searchSKU()">Search</button>
 
     <div id="result"></div>
 </div>
 
 <script>
-const products = [
-    {
-        sku: "BS1001",
-        name: "Men's Cotton Shirt",
-        vendor: "ABC Vendor",
-        quantity: 25,
-        image: "https://via.placeholder.com/150"
-    },
-    {
-        sku: "BS1002",
-        name: "Women's Kurti",
-        vendor: "XYZ Vendor",
-        quantity: 10,
-        image: "https://via.placeholder.com/150"
+
+let products=[];
+
+Papa.parse("products.csv",{
+    download:true,
+    header:true,
+    complete:function(results){
+        products=results.data;
     }
-];
+});
 
 function searchSKU(){
-    const sku = document.getElementById("skuInput").value.trim().toUpperCase();
 
-    const product = products.find(p => p.sku.toUpperCase() === sku);
+    let sku=document.getElementById("sku").value.trim().toUpperCase();
+
+    let product=products.find(
+        p => p.SKU && p.SKU.toUpperCase()===sku
+    );
 
     if(product){
-        document.getElementById("result").innerHTML = `
-            <div class="result">
-                <img src="${product.image}">
-                <h3>${product.name}</h3>
-                <p><b>SKU:</b> ${product.sku}</p>
-                <p><b>Vendor:</b> ${product.vendor}</p>
-                <p><b>Quantity:</b> ${product.quantity}</p>
-            </div>
-        `;
-    } else {
-        document.getElementById("result").innerHTML = `
-            <div class="result">
-                <h3>SKU Not Found</h3>
+        document.getElementById("result").innerHTML=`
+            <div class="card">
+                <img src="${product['Image URL']}">
+
+                <h3>${product['Product Name']}</h3>
+
+                <p><b>SKU:</b> ${product.SKU}</p>
+
+                <p><b>Vendor:</b> ${product['Vendor Name']}</p>
+
+                <p><b>Quantity:</b> ${product.Quantity}</p>
             </div>
         `;
     }
+    else{
+        document.getElementById("result").innerHTML=
+        "<h3>SKU Not Found</h3>";
+    }
 }
+
 </script>
 
 </body>
