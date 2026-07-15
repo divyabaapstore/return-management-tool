@@ -1,7 +1,105 @@
-<div class="product-card">
-    <img src="image-url.jpg" width="120">
-    <h3>Men's Cotton Shirt</h3>
-    <p><strong>SKU:</strong> BS12345</p>
-    <p><strong>Vendor:</strong> ABC Vendor</p>
-    <p><strong>Available Qty:</strong> 25</p>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Return Management Tool</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background: #f5f5f5;
+        }
+
+        .search-box{
+            max-width: 500px;
+            margin: auto;
+            text-align: center;
+        }
+
+        input{
+            width: 70%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button{
+            padding: 12px 20px;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .result{
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px #ddd;
+        }
+
+        .result img{
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="search-box">
+    <h2>Return SKU Search</h2>
+
+    <input type="text" id="skuInput" placeholder="Enter SKU">
+    <button onclick="searchSKU()">Search</button>
+
+    <div id="result"></div>
 </div>
+
+<script>
+const products = [
+    {
+        sku: "BS1001",
+        name: "Men's Cotton Shirt",
+        vendor: "ABC Vendor",
+        quantity: 25,
+        image: "https://via.placeholder.com/150"
+    },
+    {
+        sku: "BS1002",
+        name: "Women's Kurti",
+        vendor: "XYZ Vendor",
+        quantity: 10,
+        image: "https://via.placeholder.com/150"
+    }
+];
+
+function searchSKU(){
+    const sku = document.getElementById("skuInput").value.trim().toUpperCase();
+
+    const product = products.find(p => p.sku.toUpperCase() === sku);
+
+    if(product){
+        document.getElementById("result").innerHTML = `
+            <div class="result">
+                <img src="${product.image}">
+                <h3>${product.name}</h3>
+                <p><b>SKU:</b> ${product.sku}</p>
+                <p><b>Vendor:</b> ${product.vendor}</p>
+                <p><b>Quantity:</b> ${product.quantity}</p>
+            </div>
+        `;
+    } else {
+        document.getElementById("result").innerHTML = `
+            <div class="result">
+                <h3>SKU Not Found</h3>
+            </div>
+        `;
+    }
+}
+</script>
+
+</body>
+</html>
