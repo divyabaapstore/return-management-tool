@@ -1,3 +1,19 @@
+document.getElementById("result").innerHTML = `
+<div class="card">
+    <img src="${product['Image URL']}">
+
+    <h3>${product['Product Name']}</h3>
+
+    <p><b>SKU:</b> ${product.SKU}</p>
+
+    <p><b>Vendor:</b> ${product['Vendor Name']}</p>
+
+    <p><b>Quantity:</b> ${product.Quantity}</p>
+
+    <p><b>Date:</b> ${product.Date}</p>
+</div>
+`;
+
 <!DOCTYPE html>
 <html>
 <head>
