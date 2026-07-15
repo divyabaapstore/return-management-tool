@@ -1,125 +1,77 @@
-document.getElementById("result").innerHTML = `
-<div class="card">
-    <img src="${product['Image URL']}">
-
-    <h3>${product['Product Name']}</h3>
-
-    <p><b>SKU:</b> ${product.SKU}</p>
-
-    <p><b>Vendor:</b> ${product['Vendor Name']}</p>
-
-    <p><b>Quantity:</b> ${product.Quantity}</p>
-
-    <p><b>Date:</b> ${product.Date}</p>
-</div>
-`;
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>Return Management Tool</title>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-
-    <style>
-        body{
-            font-family: Arial, sans-serif;
-            background:#f5f5f5;
-            padding:40px;
-        }
-
-        .container{
-            max-width:700px;
-            margin:auto;
-            background:#fff;
-            padding:30px;
-            border-radius:10px;
-            box-shadow:0 0 10px rgba(0,0,0,0.1);
-        }
-
-        input{
-            width:70%;
-            padding:12px;
-            border:1px solid #ddd;
-            border-radius:5px;
-        }
-
-        button{
-            padding:12px 20px;
-            background:#28a745;
-            color:#fff;
-            border:none;
-            border-radius:5px;
-            cursor:pointer;
-        }
-
-        .card{
-            margin-top:20px;
-            border:1px solid #ddd;
-            padding:20px;
-            border-radius:10px;
-        }
-
-        img{
-            width:150px;
-            height:150px;
-            object-fit:cover;
-        }
-    </style>
 </head>
 
 <body>
 
 <div class="container">
-    <h2>SKU Search</h2>
 
-    <input type="text" id="sku" placeholder="Enter SKU">
-    <button onclick="searchSKU()">Search</button>
+    <div class="filters">
 
-    <div id="result"></div>
+        <select id="categoryFilter">
+            <option value="">All Categories</option>
+        </select>
+
+        <input type="text" id="skuSearch" placeholder="SKU">
+
+        <input type="text" id="vendorSkuSearch" placeholder="Vendor SKU">
+
+        <select id="vendorFilter">
+            <option value="">All Vendor</option>
+        </select>
+
+        <select id="stockFilter">
+            <option value="">All Stock</option>
+            <option value="In Stock">In Stock</option>
+            <option value="Out Of Stock">Out Of Stock</option>
+        </select>
+
+        <button onclick="applyFilters()">Search</button>
+
+    </div>
+
+    <div class="summary">
+        <div>Total SKU: <span id="totalSku">0</span></div>
+        <div>Total Instock SKU: <span id="instockSku">0</span></div>
+        <div>Total Out Of Stock SKU: <span id="outstockSku">0</span></div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Product ID</th>
+                <th>Image</th>
+                <th>BAAP SKU</th>
+                <th>Vendor SKU</th>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Wholesale Price</th>
+                <th>Vendor Price</th>
+                <th>MRP</th>
+                <th>Vendor</th>
+                <th>Vendor ID</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+
+        <tbody id="tableBody"></tbody>
+
+    </table>
+
+    <div class="pagination">
+        <button onclick="previousPage()">Previous</button>
+        <span id="pageInfo"></span>
+        <button onclick="nextPage()">Next</button>
+    </div>
+
 </div>
 
-<script>
-
-let products=[];
-
-Papa.parse("products.csv",{
-    download:true,
-    header:true,
-    complete:function(results){
-        products=results.data;
-    }
-});
-
-function searchSKU(){
-
-    let sku=document.getElementById("sku").value.trim().toUpperCase();
-
-    let product=products.find(
-        p => p.SKU && p.SKU.toUpperCase()===sku
-    );
-
-    if(product){
-        document.getElementById("result").innerHTML=`
-            <div class="card">
-                <img src="${product['Image URL']}">
-
-                <h3>${product['Product Name']}</h3>
-
-                <p><b>SKU:</b> ${product.SKU}</p>
-
-                <p><b>Vendor:</b> ${product['Vendor Name']}</p>
-
-                <p><b>Quantity:</b> ${product.Quantity}</p>
-            </div>
-        `;
-    }
-    else{
-        document.getElementById("result").innerHTML=
-        "<h3>SKU Not Found</h3>";
-    }
-}
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
