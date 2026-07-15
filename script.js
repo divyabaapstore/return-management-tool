@@ -24,8 +24,16 @@ function populateFilters() {
     const categoryFilter = document.getElementById("categoryFilter");
     const vendorFilter = document.getElementById("vendorFilter");
 
-    const categories = [...new Set(products.map(p => p["Category"]).filter(Boolean))];
-    const vendors = [...new Set(products.map(p => p["Vendor"]).filter(Boolean))];
+    const categories = [...new Set(
+        products.map(p => p["Category"]).filter(Boolean)
+    )];
+
+    const vendors = [...new Set(
+        products.map(p => p["Vendor"]).filter(Boolean)
+    )];
+
+    categories.sort();
+    vendors.sort();
 
     categories.forEach(category => {
         categoryFilter.innerHTML +=
@@ -44,65 +52,84 @@ function updateSummary() {
         products.length;
 
     document.getElementById("instockSku").innerText =
-        products.filter(p => Number(p["Quantity"]) > 0).length;
+        products.filter(
+            p => Number(p["Quantity"]) > 0
+        ).length;
 
     document.getElementById("outstockSku").innerText =
-        products.filter(p => Number(p["Quantity"]) <= 0).length;
+        products.filter(
+            p => Number(p["Quantity"]) <= 0
+        ).length;
 }
 
 function applyFilters() {
 
+    const category =
+        document.getElementById("categoryFilter")
+        .value
+        .trim();
+
     const sku =
         document.getElementById("skuSearch")
         .value
-        .toLowerCase()
-        .trim();
+        .trim()
+        .toLowerCase();
 
     const vendorSku =
         document.getElementById("vendorSkuSearch")
         .value
-        .toLowerCase()
-        .trim();
+        .trim()
+        .toLowerCase();
 
     const vendor =
-        document.getElementById("vendorFilter").value;
-
-    const category =
-        document.getElementById("categoryFilter").value;
+        document.getElementById("vendorFilter")
+        .value
+        .trim();
 
     const stock =
-        document.getElementById("stockFilter").value;
+        document.getElementById("stockFilter")
+        .value
+        .trim();
 
-    filteredProducts = products.filter(function(p) {
-
-        const skuMatch =
-            !sku ||
-            (p["BAAP SKU"] &&
-            p["BAAP SKU"].toLowerCase().includes(sku));
-
-        const vendorSkuMatch =
-            !vendorSku ||
-            (p["Vendor SKU"] &&
-            p["Vendor SKU"].toLowerCase().includes(vendorSku));
-
-        const vendorMatch =
-            !vendor ||
-            p["Vendor"] === vendor;
+    filteredProducts = products.filter(product => {
 
         const categoryMatch =
-            !category ||
-            p["Category"] === category;
+            category === "" ||
+            product["Category"] === category;
 
-        const stockMatch =
-            !stock ||
-            (stock === "In Stock" && Number(p["Quantity"]) > 0) ||
-            (stock === "Out Of Stock" && Number(p["Quantity"]) <= 0);
+        const skuMatch =
+            sku === "" ||
+            (product["BAAP SKU"] || "")
+            .toLowerCase()
+            .includes(sku);
+
+        const vendorSkuMatch =
+            vendorSku === "" ||
+            (product["Vendor SKU"] || "")
+            .toLowerCase()
+            .includes(vendorSku);
+
+        const vendorMatch =
+            vendor === "" ||
+            product["Vendor"] === vendor;
+
+        let stockMatch = true;
+
+        if(stock === "In Stock"){
+            stockMatch =
+                Number(product["Quantity"]) > 0;
+        }
+
+        if(stock === "Out Of Stock"){
+            stockMatch =
+                Number(product["Quantity"]) <= 0;
+        }
 
         return (
+            categoryMatch &&
             skuMatch &&
             vendorSkuMatch &&
             vendorMatch &&
-            categoryMatch &&
             stockMatch
         );
     });
@@ -125,52 +152,48 @@ function displayTable() {
     const end =
         start + rowsPerPage;
 
-    const rows =
+    const pageData =
         filteredProducts.slice(start, end);
 
-    rows.forEach(function(p) {
+    pageData.forEach(product => {
 
-        const row = `
+        tableBody.innerHTML += `
         <tr>
+            <td>${product["Date"] || ""}</td>
 
-            <td>${p["Date"] || ""}</td>
-
-            <td>${p["Product ID"] || ""}</td>
+            <td>${product["Product ID"] || ""}</td>
 
             <td>
                 <img
-                    src="${p["Image"] || ''}"
+                    src="${product["Image"] || ''}"
                     width="70"
                     height="70"
-                    style="object-fit:contain;"
-                    onerror="this.src='https://via.placeholder.com/70?text=No+Image'"
+                    style="object-fit:contain"
+                    onerror="this.src='https://via.placeholder.com/70?text=No+Image';"
                 >
             </td>
 
-            <td>${p["BAAP SKU"] || ""}</td>
+            <td>${product["BAAP SKU"] || ""}</td>
 
-            <td>${p["Vendor SKU"] || ""}</td>
+            <td>${product["Vendor SKU"] || ""}</td>
 
-            <td>${p["Name"] || ""}</td>
+            <td>${product["Name"] || ""}</td>
 
-            <td>${p["Quantity"] || 0}</td>
+            <td>${product["Quantity"] || 0}</td>
 
-            <td>${p["Wholesale Price"] || 0}</td>
+            <td>${product["Wholesale Price"] || 0}</td>
 
-            <td>${p["Vendor Price"] || 0}</td>
+            <td>${product["Vendor Price"] || 0}</td>
 
-            <td>${p["MRP"] || 0}</td>
+            <td>${product["MRP"] || 0}</td>
 
-            <td>${p["Vendor"] || ""}</td>
+            <td>${product["Vendor"] || ""}</td>
 
-            <td>${p["Vendor ID"] || ""}</td>
+            <td>${product["Vendor ID"] || ""}</td>
 
-            <td>${p["Category"] || ""}</td>
-
+            <td>${product["Category"] || ""}</td>
         </tr>
         `;
-
-        tableBody.innerHTML += row;
     });
 
     const totalPages =
@@ -185,7 +208,7 @@ function nextPage() {
     const totalPages =
         Math.ceil(filteredProducts.length / rowsPerPage);
 
-    if (currentPage < totalPages) {
+    if(currentPage < totalPages){
         currentPage++;
         displayTable();
     }
@@ -193,8 +216,23 @@ function nextPage() {
 
 function previousPage() {
 
-    if (currentPage > 1) {
+    if(currentPage > 1){
         currentPage--;
         displayTable();
     }
 }
+
+document.getElementById("categoryFilter")
+.addEventListener("change", applyFilters);
+
+document.getElementById("vendorFilter")
+.addEventListener("change", applyFilters);
+
+document.getElementById("stockFilter")
+.addEventListener("change", applyFilters);
+
+document.getElementById("skuSearch")
+.addEventListener("keyup", applyFilters);
+
+document.getElementById("vendorSkuSearch")
+.addEventListener("keyup", applyFilters);
