@@ -49,15 +49,15 @@ function populateFilters() {
 function updateSummary() {
 
     document.getElementById("totalSku").innerText =
-        products.length;
+        filteredProducts.length;
 
     document.getElementById("instockSku").innerText =
-        products.filter(
+        filteredProducts.filter(
             p => Number(p["Quantity"]) > 0
         ).length;
 
     document.getElementById("outstockSku").innerText =
-        products.filter(
+        filteredProducts.filter(
             p => Number(p["Quantity"]) <= 0
         ).length;
 }
@@ -65,9 +65,7 @@ function updateSummary() {
 function applyFilters() {
 
     const category =
-        document.getElementById("categoryFilter")
-        .value
-        .trim();
+        document.getElementById("categoryFilter").value.trim();
 
     const sku =
         document.getElementById("skuSearch")
@@ -82,14 +80,10 @@ function applyFilters() {
         .toLowerCase();
 
     const vendor =
-        document.getElementById("vendorFilter")
-        .value
-        .trim();
+        document.getElementById("vendorFilter").value.trim();
 
     const stock =
-        document.getElementById("stockFilter")
-        .value
-        .trim();
+        document.getElementById("stockFilter").value.trim();
 
     filteredProducts = products.filter(product => {
 
@@ -115,14 +109,12 @@ function applyFilters() {
 
         let stockMatch = true;
 
-        if(stock === "In Stock"){
-            stockMatch =
-                Number(product["Quantity"]) > 0;
+        if (stock === "In Stock") {
+            stockMatch = Number(product["Quantity"]) > 0;
         }
 
-        if(stock === "Out Of Stock"){
-            stockMatch =
-                Number(product["Quantity"]) <= 0;
+        if (stock === "Out Of Stock") {
+            stockMatch = Number(product["Quantity"]) <= 0;
         }
 
         return (
@@ -136,6 +128,7 @@ function applyFilters() {
 
     currentPage = 1;
 
+    updateSummary();
     displayTable();
 }
 
@@ -165,10 +158,10 @@ function displayTable() {
 
             <td>
                 <img
-                    src="${product["Image"] || ''}"
+                    src="${product["Image"] || ""}"
                     width="70"
                     height="70"
-                    style="object-fit:contain"
+                    style="object-fit:contain;"
                     onerror="this.src='https://via.placeholder.com/70?text=No+Image';"
                 >
             </td>
@@ -197,7 +190,10 @@ function displayTable() {
     });
 
     const totalPages =
-        Math.ceil(filteredProducts.length / rowsPerPage);
+        Math.max(
+            1,
+            Math.ceil(filteredProducts.length / rowsPerPage)
+        );
 
     document.getElementById("pageInfo").innerHTML =
         `Page ${currentPage} of ${totalPages}`;
@@ -208,7 +204,7 @@ function nextPage() {
     const totalPages =
         Math.ceil(filteredProducts.length / rowsPerPage);
 
-    if(currentPage < totalPages){
+    if (currentPage < totalPages) {
         currentPage++;
         displayTable();
     }
@@ -216,7 +212,7 @@ function nextPage() {
 
 function previousPage() {
 
-    if(currentPage > 1){
+    if (currentPage > 1) {
         currentPage--;
         displayTable();
     }
