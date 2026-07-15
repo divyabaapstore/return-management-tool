@@ -1,0 +1,64 @@
+body{
+    font-family:Arial;
+    background:#f5f5f5;
+    margin:20px;
+}
+
+.filters{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:10px;
+    margin-bottom:20px;
+}
+
+.filters input,
+.filters select,
+.filters button{
+    padding:10px;
+}
+
+.summary{
+    display:flex;
+    justify-content:space-between;
+    margin:20px 0;
+    font-weight:bold;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:#fff;
+}
+
+th,td{
+    border:1px solid #ddd;
+    padding:10px;
+    text-align:left;
+}
+
+th{
+    background:#f2f2f2;
+}
+
+img{
+    width:70px;
+    height:70px;
+    object-fit:contain;
+}
+
+.pagination{
+    margin-top:20px;
+    text-align:center;
+}
+
+.pagination button{
+    padding:10px 20px;
+    margin:0 10px;
+}
+
+@media(max-width:768px){
+    table{
+        display:block;
+        overflow-x:auto;
+    }
+}
