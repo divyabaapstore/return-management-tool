@@ -253,27 +253,28 @@ function displayTable() {
                     onerror="this.src='https://via.placeholder.com/70?text=No+Image'"
                 >
             </td>
-
+            <td>${product["Category"] || ""}</td>
+ <td>${product["Quantity"] || 0}</td>
             <td>${product["BAAP SKU"] || ""}</td>
 
             <td>${product["Vendor SKU"] || ""}</td>
 
-            <td>${product["Name"] || ""}</td>
+           
+  <td>${product["Vendor"] || ""}</td>
 
-            <td>${product["Quantity"] || 0}</td>
+            <td>${product["Vendor ID"] || ""}</td>
+              <td>${product["Vendor Price"] || 0}</td>
 
             <td>${product["Wholesale Price"] || 0}</td>
 
-            <td>${product["Vendor Price"] || 0}</td>
+         
 
             <td>${product["MRP"] || 0}</td>
 
-            <td>${product["Vendor"] || ""}</td>
+          
 
-            <td>${product["Vendor ID"] || ""}</td>
-
-            <td>${product["Category"] || ""}</td>
-
+            
+ <td>${product["Name"] || ""}</td>
         </tr>
         `;
     });
