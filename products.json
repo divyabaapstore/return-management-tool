@@ -1,1 +1,16 @@
-
+[
+  {
+    "sku": "BS1001",
+    "product_name": "Men's Cotton Shirt",
+    "vendor_name": "Vendor A",
+    "quantity": 25,
+    "image": "https://example.com/image1.jpg"
+  },
+  {
+    "sku": "BS1002",
+    "product_name": "Women's Kurti",
+    "vendor_name": "Vendor B",
+    "quantity": 10,
+    "image": "https://example.com/image2.jpg"
+  }
+]
